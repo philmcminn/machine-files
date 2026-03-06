@@ -1,0 +1,42 @@
+tap "anomalyco/tap"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+# Select default apps for documents and URL schemes on macOS
+brew "duti"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3"
+# Modern, maintained replacement for ls
+brew "eza"
+# Monitor a directory for changes and run a shell command
+brew "fswatch"
+# GNU multiple precision arithmetic library
+brew "gmp"
+# YAML Parser
+brew "libyaml"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Library for command-line editing
+brew "readline"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Cross-shell prompt for astronauts
+brew "starship"
+# CLI tool that moves files or folder to the trash
+brew "trash"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Better and friendly vi(vim) mode plugin for ZSH
+brew "zsh-vi-mode"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
+# Web browser
+cask "firefox"
+cask "font-fira-code-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Full TeX Live distribution without GUI applications
+cask "mactex-no-gui"
+# PDF reader and note-taking application
+cask "skim"
+# Music streaming service
+cask "spotify"

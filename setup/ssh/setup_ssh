@@ -1,0 +1,44 @@
+
+#!/usr/bin/env zsh
+
+# NOTE: For macOS the actions of this script are based on the web page at:
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# Path to your default SSH key
+SSH_KEY="$HOME/.ssh/id_ed25519"
+
+# Check if the SSH key exists; if not, generate it
+if [[ ! -f "$SSH_KEY" ]]; then
+    echo "SSH key not found. Generating ed25519 key..."
+    ssh-keygen -t ed25519 -C "phil@philmcminn.com" -f "$SSH_KEY"
+else
+    echo "SSH key already exists."
+fi
+
+# Start the ssh-agent
+echo "Starting ssh-agent..."
+eval "$(ssh-agent -s)"
+
+# Write the SSH config file
+echo "Writing SSH config..."
+cat > "$HOME/.ssh/config" <<EOF
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+
+# Add the SSH key to the agent and macOS keychain
+echo "Adding SSH key to ssh-agent and macOS keychain..."
+ssh-add --apple-use-keychain "$SSH_KEY"
+
+# Now copy the public key to the clipboard
+cat ~/.ssh/id_ed25519.pub | pbcopy
+
+# Print instruction for GitHub
+echo "\n----"
+echo "Follow these instructions for setting up GitHub:"
+echo " 1. Login, click your profile pic, then go to Settings."
+echo " 2. In the \"Access\" section of the sidebar, click \"SSH and GPG keys\""
+echo " 3. Fill out the form, pasting the contents of the paste buffer in the \"Key\" field" 
+echo "----\n"

@@ -1,0 +1,14 @@
+# Key remapping for copy/paste
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# Custom icon on macOS
+macos-icon = glass
+# macos-icon = /path/to/your/icon.icns
+
+# Font
+font-family = Fira Code
+font-size = 16
+
+# Always start in this directory
+working-directory = /Users/phil/repos/

@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+# Delete any existing file
+rm -rf ~/.ssh/id_ed25519
+
+# Generate the .ssh key file
+printf '\n' | ssh-keygen -t ed25519 -C "phil@philmcminn.com"
+
+# Setup on MacOS
+if [[ ${P_MAC} == true ]]; then
+  # 1. Start the SSH agent
+  eval "$(ssh-agent -s)"
+
+  # 2. NOTE: this has not been tested, I think something has to be done to the keychain
+  ssh-add ~/.ssh/id_ed25519
+
+  # 3. Copy the key to the clipboard for setting up GitHub
+  cat ~/.ssh/id_ed25519.pub | pbcopy
+
+# Setup on NixOS
+elif [[ ${P_LINUX} == true ]]; then
+  # 1. The NixOS config can be set to start the SSH agent.
+  #    Add the following line to configuration.nix: 
+  #    programs.ssh.startAgent = true;
+  #    (So nothing to do for this step in this script)
+
+  # 2. Ensure in NixOS you have the following setting so 
+  #    that you do not have to keep running the ssh-add command:
+  #    services.gnome.gnome-keyring.enable = true;
+  ssh-add ~/.ssh/id_ed25519
+  
+  # 3. Copy the key to the clipboard for setting up GitHub
+  cat ~/.ssh/id_ed25519.pub | wl-copy
+fi
+
+# Print instruction for GitHub
+echo "\n----"
+echo "Follow these instructions for setting up GitHub:"
+echo " 1. Login, click your profile pic, then go to Settings."
+echo " 2. In the \"Access\" section of the sidebar, click \"SSH and GPG keys\""
+echo " 3. Fill out the form, pasting the contents of the paste buffer in the \"Key\" field" 
+echo "----\n"

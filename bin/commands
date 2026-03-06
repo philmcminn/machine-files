@@ -1,0 +1,99 @@
+#!/usr/bin/env zsh
+
+# ----------------------
+# Phil McMinn's Commands
+# ----------------------
+
+# ---------------------------------------
+# General functions for defining commands
+# ---------------------------------------
+
+# Declare a global associative array for keeping info about aliases.
+typeset -A COMMANDS
+
+function def_alias {
+  alias $1=$2
+  add_command $1 $3
+}
+
+function add_command {
+  COMMANDS+=( [$1]=$2 )
+}
+
+function print_commands {
+  local keys=("${(@k)COMMANDS}")
+  keys=("${(@no)keys}")
+
+  for key in $keys; do
+    val=${COMMANDS[$key]}
+    echo "\033[32m$key\033[0m\t$val"
+  done
+}
+
+# ---------------------------------------------
+# Harmonise differences between macOS and Linux
+# ---------------------------------------------
+
+if [[ ${P_MAC} == true ]]; then
+  export P_OPEN="open"
+elif [[ ${P_LINUX} == true ]]; then
+  export P_OPEN="xdg-open"
+fi
+
+
+# --------------
+# Global aliases
+# --------------
+
+def_alias cmds "print_commands"                        "This command"
+def_alias cdr  "cd $P_REPOS"                           "Changes to repos directory"
+def_alias cdw  "cd $P_WB"                              "Changes to workbench directory"
+def_alias dds  "find . -name \".DS_Store\" -delete"    "Recursively delete .DS_Store files"
+def_alias f    "${P_OPEN} ."                           "Opens the file manager in the current working directory"
+def_alias l    "eza --long --icons --color=auto"       "List current directory using eza"
+def_alias la   "eza --long --all --icons --color=auto" "Lists all in the current directory using eza"
+def_alias rn   "sudo nixos-rebuild switch"             "Rebuild nixos"
+def_alias rnu  "sudo nixos-rebuild switch --upgrade"   "Rebuild nixos, upgrade packages"
+
+
+# ----------------
+# Global functions
+# ----------------
+
+add_command "bu" "Update the Brewfile"
+function bu {
+  BREWFILE="$P_WB/config/brew/Brewfile" 
+  brew bundle dump --file=$BREWFILE --describe --force
+  echo "Brewfile ($BREWFILE) updated"
+}
+
+add_command "cdl" "Change directory and list the contents"
+function cdl() {
+  cd "$1" && l
+}
+
+add_command "mdc" "Make a directory \$1 and change directory to it"
+function mdc {
+  mkdir $1
+  cd $1
+}
+
+add_command "up" "Move up the directory structure a given number of levels"
+function up() {
+  # Set levels to the provided argument or default to 1 if not provided
+  local levels=${1:-1}  
+  for ((i=0; i<levels; i++)); do
+    cd ..
+  done
+}
+
+add_command "y" "Change directory with yazi"
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if [ -f "$tmp" ]; then
+        local cwd="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$cwd" ] && cd "$cwd"
+    fi
+}
