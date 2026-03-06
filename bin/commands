@@ -47,7 +47,7 @@ fi
 
 def_alias cmds "print_commands"                        "This command"
 def_alias cdr  "cd $P_REPOS"                           "Changes to repos directory"
-def_alias cdw  "cd $P_WB"                              "Changes to workbench directory"
+def_alias cdmf "cd $P_MF"                              "Changes to machine-files directory"
 def_alias dds  "find . -name \".DS_Store\" -delete"    "Recursively delete .DS_Store files"
 def_alias f    "${P_OPEN} ."                           "Opens the file manager in the current working directory"
 def_alias l    "eza --long --icons --color=auto"       "List current directory using eza"
