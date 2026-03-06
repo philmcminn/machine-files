@@ -17,10 +17,6 @@ for dir in $custom_shell_command_dirs; do
   source "$abs_path/commands"
 done
 
-# Short term legacy hack
-export PATH="$PATH:$P_REPOS/config/bin/git"
-source "$P_REPOS/config/bin/git/aliases"
-
 # Load key files
 source "$P_MF/keys/keys"
 

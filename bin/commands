@@ -30,16 +30,6 @@ function print_commands {
   done
 }
 
-# ---------------------------------------------
-# Harmonise differences between macOS and Linux
-# ---------------------------------------------
-
-if [[ ${P_MAC} == true ]]; then
-  export P_OPEN="open"
-elif [[ ${P_LINUX} == true ]]; then
-  export P_OPEN="xdg-open"
-fi
-
 
 # --------------
 # Global aliases
@@ -49,7 +39,7 @@ def_alias cmds "print_commands"                        "This command"
 def_alias cdr  "cd $P_REPOS"                           "Changes to repos directory"
 def_alias cdmf "cd $P_MF"                              "Changes to machine-files directory"
 def_alias dds  "find . -name \".DS_Store\" -delete"    "Recursively delete .DS_Store files"
-def_alias f    "${P_OPEN} ."                           "Opens the file manager in the current working directory"
+def_alias f    "o ."                                   "Opens the file manager in the current working directory"
 def_alias l    "eza --long --icons --color=auto"       "List current directory using eza"
 def_alias la   "eza --long --all --icons --color=auto" "Lists all in the current directory using eza"
 def_alias rn   "sudo nixos-rebuild switch"             "Rebuild nixos"
@@ -78,6 +68,15 @@ function mdc {
   cd $1
 }
 
+add_command "o" "Open an application in the OS"
+function o {
+  if [[ ${P_MAC} == true ]]; then
+    open $1
+  elif [[ ${P_LINUX} == true ]]; then
+    xdg-open $1
+  fi
+}
+
 add_command "up" "Move up the directory structure a given number of levels"
 function up() {
   # Set levels to the provided argument or default to 1 if not provided
@@ -97,3 +96,4 @@ function y() {
         [ -d "$cwd" ] && cd "$cwd"
     fi
 }
+

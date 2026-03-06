@@ -4,15 +4,60 @@
 # Phil McMinn's Git commands
 # --------------------------
 
-add_command "gcl" "git clone repository and submodules"
+# --------------
+# git aliases
+# --------------
+
+def_alias gst "git status" "git: alias for 'git status"
+def_alias gwc "gw commits" "git: view commits on web fo repository"
+
+# ------------
+# git commands
+# ------------
+
+add_command "gcl" "git: clone repository and submodules"
 function gcl {
+  # clone repository
   git clone $1
+
+  # change directory to repository
   basename=$(basename $1)
   dir=${basename%.*}
   cd $dir
+
+  # also ensure submodules are cloned 
   git submodule init
-  git submodule update
+
+  # git submodule update
+  # ensure latest versions of submodules are pulled
+  # which is the default behaviour I usually need.
+  git submodule update --init --recursive --remote
   
   # uncomment when working again
   #git_track
 }
+
+function gcp {
+  printf "\033[1;32mPulling...\n\033[0m"
+  gpl || return 1
+  printf "\n\033[1;32mTo be committed:\n\033[0m"
+  git diff --name-only HEAD | while read f; do echo "  - $f"; done
+  printf "\n"
+  git-commit-helper "$@" || return 1
+  printf "\n\033[1;32mPushing...\n\033[0m"
+  git push || return 1
+}
+
+add_command "gpl" "git: pull including submodules"
+function gpl {
+  git pull
+  git submodule update --init --recursive --remote
+}
+
+add_command "gw" "git: view repository on the web"
+function gw {
+  url=$(git config --get remote.origin.url | sed 's|git@\(.*\):\(.*\)\.git|https://\1/\2|')
+  [[ -n $1 ]] && url+="/$1"
+  o "$url"
+}
+

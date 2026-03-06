@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+
+# Interactive Git commit helper.
+#
+# Usage:
+#   git_commit_helper "Your commit message"
+#   git_commit_helper # Attempts to generate or asks for commit message
+
+untracked=$(git ls-files --others --exclude-standard)
+
+if [[ -n "$untracked" ]]; then
+  printf "\033[1;31mUntracked files detected:\n\033[0m"
+  echo "$untracked" | while read f; do echo "  - $f"; done
+  printf "\033[31mWould you like to \033[1m[a]\033[0;31mdd, \033[1m[c]\033[0;31mommit anyway, or \033[1m[h]\033[0;31malt?\033[0m"
+  read -rsk1 input
+  echo ""
+
+  case $input in
+    a|A)
+      echo "Adding untracked files..."
+      git add $( echo "$untracked")
+      ;;
+    c|C)
+      echo "Committing without untracked files..."
+      ;;
+    *)
+      echo "Halted."
+      exit 1
+      ;;
+  esac
+fi
+
+if [ -n "$1" ]; then
+  git commit -a -m "$1"
+else
+  printf "\n\033[32mWould you like to \033[1m[g]\033[0;32menerate a commit message or \033[1m[e]\033[0;32mdit manually?\033[0m\n"
+  read -rsk1 choice
+  case "$choice" in
+    g)
+      MESSAGE=$(git-generate-commit-msg)
+      ;;
+    *)
+      MESSAGE=""
+      ;;
+  esac
+  git commit -a -t <(echo "$MESSAGE")
+  commit_status=$?
+  echo
+  exit $commit_status
+fi
