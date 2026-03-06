@@ -4,6 +4,8 @@
 # Install NixOS directory through a symbolic link
 # -----------------------------------------------
 
+# TODO - simplify to just delete the old directory.
+
 set -e  # Exit on any error
 
 # Use the directory where this script is located as the source

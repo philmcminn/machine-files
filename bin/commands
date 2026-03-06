@@ -62,7 +62,7 @@ def_alias rnu  "sudo nixos-rebuild switch --upgrade"   "Rebuild nixos, upgrade p
 
 add_command "bu" "Update the Brewfile"
 function bu {
-  BREWFILE="$P_WB/config/brew/Brewfile" 
+  BREWFILE="$P_MF/config/brew/Brewfile" 
   brew bundle dump --file=$BREWFILE --describe --force
   echo "Brewfile ($BREWFILE) updated"
 }
