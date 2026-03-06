@@ -40,8 +40,16 @@ function gcl {
 function gcp {
   printf "\033[1;32mPulling...\n\033[0m"
   gpl || return 1
+
+  changes=$(git diff --name-only HEAD)
+  untracked=$(git ls-files --others --exclude-standard)
+  if [[ -z "$changes" && -z "$untracked" ]]; then
+    printf "\033[32mNothing to commit.\n\033[0m"
+    return 0
+  fi
+
   printf "\n\033[1;32mTo be committed:\n\033[0m"
-  git diff --name-only HEAD | while read f; do echo "  - $f"; done
+  echo "$changes" | while read f; do echo "  - $f"; done
   printf "\n"
   git-commit-helper "$@" || return 1
   printf "\n\033[1;32mPushing...\n\033[0m"
