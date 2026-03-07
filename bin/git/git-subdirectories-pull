@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+source git-find-repos
+
+git-find-repos
+
+for dir in ${(ko)repos}; do
+  clean_dir="${dir//\"/}"
+  printf "\033[1;36m%s\033[0m..." "$clean_dir"
+  git -C "$clean_dir" pull
+done
+

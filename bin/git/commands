@@ -10,6 +10,7 @@
 
 def_alias gpl "git pull"                 "git: alias for 'git pull'"
 def_alias gsc "git-subdirectories-check" "git: check status of repos in subdirectories"
+def_alias gsp "git-subdirectories-pull"  "git: pull all repos in subdirectories"
 def_alias gst "git status"               "git: alias for 'git status"
 def_alias gwc "gw commits"               "git: view commits on web fo repository"
 
@@ -36,7 +37,7 @@ function gcl {
   git submodule update --init --recursive --remote
   
   # uncomment when working again
-  #git_track
+  git-track
 }
 
 add_command "gcp" "git: commit (with helper) then push"
