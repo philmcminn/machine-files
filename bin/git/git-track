@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+source git-find-repos
+
+cd "$P_REPOS" || exit 1
+
+git-find-repos
+
+current_file="$P_GL/$P_HOST.current"
+hist_file="$P_GL/$P_HOST.hist"
+
+if [[ -f "$current_file" ]]; then
+  while IFS=' ' read -r dir url; do
+    if [[ ! -d "$P_REPOS/$dir" ]]; then
+      printf "\033[33m  moved to hist: %s\033[0m\n" "$dir"
+      echo "$dir $url" >> "$hist_file"
+    fi
+  done < "$current_file"
+fi
+
+if [[ -f "$hist_file" ]]; then
+  sort "$hist_file" > "$hist_file.tmp" && mv "$hist_file.tmp" "$hist_file"
+fi
+
+{
+  for dir in ${(ko)repos}; do
+    echo "$dir ${repos[$dir]}"
+  done
+} | sort > "$current_file"
+
+current_count=$(wc -l < "$current_file")
+hist_count=0
+[[ -f "$hist_file" ]] && hist_count=$(wc -l < "$hist_file")
+
+printf "\n\033[1;32m%d repos tracked\033[0m, \033[32m%d in history\033[0m\n" "$current_count" "$hist_count"

@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# find git repos recursively from the current directory
+function git-find-repos {
+  typeset -gA repos
+  while IFS= read -r gitdir; do
+    dir="${gitdir%/.git}"
+    url=$(git -C "$dir" remote get-url origin 2>/dev/null)
+    repos["$dir"]="$url"
+  done < <(find . -name ".git" -type d -prune)
+}
+

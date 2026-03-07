@@ -8,6 +8,7 @@
 # git aliases
 # --------------
 
+def_alias gpl "git pull"   "git: alias for 'git pull'"
 def_alias gst "git status" "git: alias for 'git status"
 def_alias gwc "gw commits" "git: view commits on web fo repository"
 

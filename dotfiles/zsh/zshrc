@@ -8,6 +8,7 @@ export LANG=en_GB.UTF-8
 # Local paths
 export P_REPOS="$HOME/repos"
 export P_MF="$P_REPOS/machine-files"
+export P_GL="$P_MF/log/git"
 
 # Load custom shell commands
 custom_shell_command_dirs=(bin bin/git bin/latex)
