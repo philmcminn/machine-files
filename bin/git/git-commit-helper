@@ -37,7 +37,7 @@ else
   read -rsk1 choice
   case "$choice" in
     g)
-      MESSAGE=$(git-generate-commit-msg)
+      MESSAGE=$(git-suggest-commit-message)
       ;;
     *)
       MESSAGE=""

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Suggests a Git commit message using a LLM.
+#
+# Usage:
+#   git-suggest-commit-message
+
+diff=$(git diff --staged)
+body=$(jq -n --arg diff "$diff" '{
+  model: "claude-haiku-4-5",
+  max_tokens: 100,
+  messages: [{
+    role: "user",
+    content: ("You are a git commit message generator. Respond with a single commit message only. No explanation, no alternatives, no punctuation at the end. Just the commit message itself.\n\n" + $diff)
+  }]
+}')
+message=$(curl -s https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d "$body" \
+  | jq -r '.content[0].text')
+echo "$message"
+
