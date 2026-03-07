@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+source git-find-repos
+
+git-find-repos
+
+any_changes=0
+
+for dir in ${(ko)repos}; do
+  changes=$(git -C "${dir//\"/}" status --porcelain)
+  if [[ -n "$changes" ]]; then
+    any_changes=1
+    printf "\033[1;31m%s\033[0m has uncommitted changes\n" "$dir"
+  fi
+done
+
+if [[ $any_changes -eq 0 ]]; then
+  printf "\033[1;32mAll repos are clean.\033[0m\n"
+fi
