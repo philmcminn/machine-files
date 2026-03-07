@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+
+# --------------------------
+# Phil McMinn's Latex commands
+# --------------------------
+
+# -------------
+# Latex aliases
+# -------------
+
+def_alias lbv "latex_build -pdf -pv"             "Latex: build and view"
+def_alias lbc "latex_build -pdf -pvc -view=none" "Latex: continuously build"
+def_alias ld  "latexmk -C; rm *.bbl"             "Latex: delete temporary files"
+
+
+# --------------
+# Latex commands
+# --------------
+
+function latex_main_files {
+  grep -l "\\\\begin{document}" *.tex
+}
+
+function latex_build {
+  local file_arg="${@[-1]}"  # last argument is the file (optional)
+  local flags=("${@[1,-2]}") # everything except last is flags
+
+  if [ -z "$file_arg" ] || [[ "$file_arg" == -* ]]; then
+    # no file supplied, all args are flags
+    flags=("$@")
+    grep -l "\\\\begin{document}" *.tex | while read line; do
+      latexmk "${flags[@]}" "$line"
+    done
+  else
+    latexmk "${flags[@]}" "$file_arg"
+  fi
+}
+
